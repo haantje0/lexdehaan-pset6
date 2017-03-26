@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Huiseten</string>
+    <string name="log_in">Log in</string>
+    <string name="e_mail">E-mail</string>
+    <string name="password">Password</string>
+    <string name="keep_logged_in">Keep me logged in</string>
+    <string name="register">Register</string>
+    <string name="password_again">Password again</string>
+    <string name="login">Login</string>
+    <string name="i_want_to_eat">I want to eat!</string>
+    <string name="yes">Yes</string>
+    <string name="are_you_eating_at_home_today">Are you eating at home today?</string>
+    <string name="no">No</string>
+    <string name="comments">comments</string>
+    <string name="do_you_have_some_comments">Do you have some comments?</string>
+    <string name="submit">Submit</string>
+    <string name="i_have_special_wishes">I have special wishes!</string>
+    <string name="i_have_comments">I have comments!</string>
+</resources>
