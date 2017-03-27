@@ -1,31 +1,21 @@
 package com.example.lex.huiseten;
 
-import android.content.Intent;
-import android.support.annotation.NonNull;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import java.util.Objects;
 
-import static android.R.attr.checked;
-import static android.R.attr.visible;
 
 public class EatDataSetter extends AppCompatActivity {
 
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
-
-    private DatabaseReference mDatabase;
+    FirebaseManager fbManager = new FirebaseManager();
 
     EditText comments_EditText;
     CheckBox comments_CheckBox;
@@ -41,64 +31,30 @@ public class EatDataSetter extends AppCompatActivity {
         setContentView(R.layout.activity_eat_data_setter);
 
         if (savedInstanceState != null) {
-            // set the text to the saved state
-            try {
-                eating = savedInstanceState.getBoolean("eating");
-            } catch (RuntimeException e){
-                e.printStackTrace();
-            }
-
-            setComments();
-            String savedComments = savedInstanceState.getString("comments");
-            comments_EditText.setText(savedComments);
-
-            comments_CheckBox = (CheckBox) findViewById(R.id.comments_CheckBox);
-            if (savedInstanceState.getBoolean("hasComments")) {
-                hasComments = true;
-                comments_EditText.setVisibility(View.VISIBLE);
-            }
-
-
+            setInstaneState(savedInstanceState);
         }
 
-        mAuth = FirebaseAuth.getInstance();
+        fbManager.setInstance();
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        fbManager.setListener();
 
-
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // User is signed in
-                    Log.d("signed in", "onAuthStateChanged:signed_in:" + user.getUid());
-                } else {
-                    // User is signed out
-                    Log.d("signed out", "onAuthStateChanged:signed_out");
-                }
-                // ...
-            }
-        };
+        fbManager.setDatabase();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
+        fbManager.onStart();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
-        }
+        fbManager.onStop();
     }
 
     public void setUsername() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        username = user.getDisplayName();
+        username = fbManager.getUsername();
     }
 
     public void setComments() {
@@ -137,6 +93,7 @@ public class EatDataSetter extends AppCompatActivity {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void onSubmit(View view){
         setUsername();
         setComments();
@@ -147,30 +104,18 @@ public class EatDataSetter extends AppCompatActivity {
         }
         else {
             if (hasComments == false) {
-                addToDB();
+                fbManager.addToDB(EatDataSetter.this, username, eating, hasComments, comments);
             }
             else {
-                if (comments == "") {
+                if (Objects.equals(comments, "")) {
                     Toast.makeText(EatDataSetter.this, "fill in your comments",
                             Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    addToDB();
+                    fbManager.addToDB(EatDataSetter.this, username, eating, hasComments, comments);
                 }
             }
         }
-    }
-
-    public void addToDB() {
-        EatData data = new EatData(username, eating, hasComments, comments);
-        mDatabase.child("Superhuis").child(username).setValue(data);
-        startEatListActivity();
-        finish();
-    }
-
-    public void startEatListActivity() {
-        Intent intent = new Intent(this, EatList.class);
-        startActivity(intent);
     }
 
     @Override
@@ -187,7 +132,24 @@ public class EatDataSetter extends AppCompatActivity {
         outState.putString("comments", comments);
 
         super.onSaveInstanceState(outState);
+    }
 
+    public void setInstaneState(Bundle savedInstanceState) {
+        // set the text to the saved state
+        try {
+            eating = savedInstanceState.getBoolean("eating");
+        } catch (RuntimeException e){
+            e.printStackTrace();
+        }
 
+        setComments();
+        String savedComments = savedInstanceState.getString("comments");
+        comments_EditText.setText(savedComments);
+
+        comments_CheckBox = (CheckBox) findViewById(R.id.comments_CheckBox);
+        if (savedInstanceState.getBoolean("hasComments")) {
+            hasComments = true;
+            comments_EditText.setVisibility(View.VISIBLE);
+        }
     }
 }

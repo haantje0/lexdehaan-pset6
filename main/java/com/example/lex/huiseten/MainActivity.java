@@ -1,25 +1,19 @@
 package com.example.lex.huiseten;
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.support.annotation.NonNull;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
+    FirebaseManager fbManager = new FirebaseManager();
 
     String email;
     String password;
@@ -27,54 +21,30 @@ public class MainActivity extends AppCompatActivity {
     EditText email_EditText;
     EditText password_EditText;
 
-    MainActivity activity = this;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         if (savedInstanceState != null) {
-            // set the text to the saved state
-            setEmail();
-            String savedEmail = savedInstanceState.getString("email");
-            email_EditText.setText(savedEmail);
-
-            setPassword();
-            String savedPassword = savedInstanceState.getString("password");
-            password_EditText.setText(savedPassword);
+            setInstanceState(savedInstanceState);
         }
 
-        mAuth = FirebaseAuth.getInstance();
+        fbManager.setInstance();
 
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // User is signed in
-                    Log.d("signed in", "onAuthStateChanged:signed_in:" + user.getUid());
-                } else {
-                    // User is signed out
-                    Log.d("signed out", "onAuthStateChanged:signed_out");
-                }
-                // ...
-            }
-        };
+        fbManager.setListener();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
+        fbManager.onStart();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
-        }
+        fbManager.onStop();
     }
 
     public void register(View view) {
@@ -82,33 +52,21 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void logIn(View view) {
 
         setEmail();
         setPassword();
 
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d("Sign in", "signInWithEmail:onComplete:" + task.isSuccessful());
-
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
-                        if (!task.isSuccessful()) {
-                            Log.w("email", "signInWithEmail", task.getException());
-                            Toast.makeText(MainActivity.this, "Email and password do not match",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                        else {
-                            Toast.makeText(MainActivity.this, "Logged in user: " + email,
-                                    Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(activity, EatList.class);
-                            startActivity(intent);
-                        }
-                    }
-                });
+        if (Objects.equals(email, "")) {
+            Toast.makeText(MainActivity.this, "Fill in your email",
+                    Toast.LENGTH_SHORT).show();
+        } else if (Objects.equals(password, "")) {
+            Toast.makeText(MainActivity.this, "Fill in your password",
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            fbManager.checkAndLogIn(this, email, password, false);
+        }
     }
 
     public void setEmail() {
@@ -131,5 +89,16 @@ public class MainActivity extends AppCompatActivity {
         outState.putString("password", password);
 
         super.onSaveInstanceState(outState);
+    }
+
+    public void setInstanceState(Bundle savedInstanceState) {
+        // set the text to the saved state
+        setEmail();
+        String savedEmail = savedInstanceState.getString("email");
+        email_EditText.setText(savedEmail);
+
+        setPassword();
+        String savedPassword = savedInstanceState.getString("password");
+        password_EditText.setText(savedPassword);
     }
 }
