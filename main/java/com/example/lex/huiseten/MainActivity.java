@@ -15,11 +15,10 @@ public class MainActivity extends AppCompatActivity {
 
     FirebaseManager fbManager = new FirebaseManager();
 
-    String email;
-    String password;
-
     EditText email_EditText;
     EditText password_EditText;
+
+    UserData userData = new UserData();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,25 +57,25 @@ public class MainActivity extends AppCompatActivity {
         setEmail();
         setPassword();
 
-        if (Objects.equals(email, "")) {
+        if (Objects.equals(userData.getEmail(), "")) {
             Toast.makeText(MainActivity.this, "Fill in your email",
                     Toast.LENGTH_SHORT).show();
-        } else if (Objects.equals(password, "")) {
+        } else if (Objects.equals(userData.getPassword(), "")) {
             Toast.makeText(MainActivity.this, "Fill in your password",
                     Toast.LENGTH_SHORT).show();
         } else {
-            fbManager.checkAndLogIn(this, email, password, false);
+            fbManager.checkAndLogIn(this, userData, false);
         }
     }
 
     public void setEmail() {
         email_EditText = (EditText) findViewById(R.id.email_editText);
-        email = email_EditText.getText().toString();
+        userData.setEmail(email_EditText.getText().toString());
     }
 
     public void setPassword() {
         password_EditText = (EditText) findViewById(R.id.password_editText);
-        password = password_EditText.getText().toString();
+        userData.setPassword(password_EditText.getText().toString());
     }
 
     @Override
@@ -84,9 +83,9 @@ public class MainActivity extends AppCompatActivity {
 
         // save the edittexts
         setEmail();
-        outState.putString("email", email);
+        outState.putString("email", userData.getEmail());
         setPassword();
-        outState.putString("password", password);
+        outState.putString("password", userData.getPassword());
 
         super.onSaveInstanceState(outState);
     }

@@ -37,8 +37,6 @@ class FirebaseManager {
 
     private DatabaseReference mDatabase;
 
-    String username;
-
     public void onStart() {
         mAuth.addAuthStateListener(mAuthListener);
     }
@@ -67,11 +65,11 @@ class FirebaseManager {
                 }}};
     }
 
-    public void setUsername(final Context context) {
+    public void setUsername(final Context context, UserData userData) {
         FirebaseUser user = mAuth.getCurrentUser();
 
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                .setDisplayName(username)
+                .setDisplayName(userData.getUsername())
                 .build();
 
         user.updateProfile(profileUpdates)
@@ -91,8 +89,8 @@ class FirebaseManager {
         return user.getDisplayName();
     }
 
-    public void checkAndLogIn(final Context context, String email, String password, final boolean firstTime) {
-        mAuth.signInWithEmailAndPassword(email, password)
+    public void checkAndLogIn(final Context context, final UserData userData, final boolean firstTime) {
+        mAuth.signInWithEmailAndPassword(userData.getEmail(), userData.getPassword())
                 .addOnCompleteListener((Activity) context, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -109,15 +107,15 @@ class FirebaseManager {
                             Toast.makeText(context, "Logged in user",
                                     Toast.LENGTH_SHORT).show();
                             if (firstTime) {
-                                setUsername(context);
+                                setUsername(context, userData);
                             } else {
                                 Intent intent = new Intent(context, EatList.class);
                                 context.startActivity(intent);
                             }}}});
     }
 
-    public void createUser(final Context context, final String email, final String password, final String Username) {
-        Task<AuthResult> authResultTask = mAuth.createUserWithEmailAndPassword(email, password)
+    public void createUser(final Context context, final UserData userData) {
+        Task<AuthResult> authResultTask = mAuth.createUserWithEmailAndPassword(userData.getEmail(), userData.getPassword())
                 .addOnCompleteListener((Activity) context, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -132,8 +130,7 @@ class FirebaseManager {
                         } else {
                             Toast.makeText(context, "Created user",
                                     Toast.LENGTH_SHORT).show();
-                            username = Username;
-                            checkAndLogIn(context, email, password, true);
+                            checkAndLogIn(context, userData, true);
                         }}});
     }
 }

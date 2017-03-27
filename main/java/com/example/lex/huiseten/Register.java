@@ -10,15 +10,14 @@ public class Register extends AppCompatActivity {
 
     FirebaseManager fbManager = new FirebaseManager();
 
-    String email;
-    String username;
-    String password;
     String passwordAgain;
 
     EditText email_EditText;
     EditText username_EditText;
     EditText password_EditText;
     EditText passwordAgain_EditText;
+
+    UserData userData = new UserData();
 
     Register activity = this;
 
@@ -54,36 +53,36 @@ public class Register extends AppCompatActivity {
         setPassword();
         setPasswordAgain();
 
-        if (!passwordAgain.equals(password)) {
+        if (!passwordAgain.equals(userData.getPassword())) {
             Toast.makeText(activity, "Passwords do not match",
                     Toast.LENGTH_SHORT).show();
             passwordAgain_EditText.getText().clear();
-        } else if (password.length() < 6) {
+        } else if (userData.getPassword().length() < 6) {
             Toast.makeText(activity, "Password not long enough",
                     Toast.LENGTH_SHORT).show();
             password_EditText.getText().clear();
             passwordAgain_EditText.getText().clear();
-        } else if (username == null) {
+        } else if (userData.getUsername() == null) {
             Toast.makeText(activity, "Fill in a first name",
                     Toast.LENGTH_SHORT).show();
         } else {
-            fbManager.createUser(activity, email, password, username);
+            fbManager.createUser(activity, userData);
         }
     }
 
     public void setEmail() {
         email_EditText = (EditText) findViewById(R.id.email_editText);
-        email = email_EditText.getText().toString();
+        userData.setEmail(email_EditText.getText().toString());
     }
 
     public void setUsername() {
         username_EditText = (EditText) findViewById(R.id.username_editText);
-        username = username_EditText.getText().toString();
+        userData.setUsername(username_EditText.getText().toString());
     }
 
     public void setPassword() {
         password_EditText = (EditText) findViewById(R.id.password_editText);
-        password = password_EditText.getText().toString();
+        userData.setPassword(password_EditText.getText().toString());
     }
 
     public void setPasswordAgain() {
@@ -96,9 +95,9 @@ public class Register extends AppCompatActivity {
 
         // save the edittexts
         setEmail();
-        outState.putString("email", email);
+        outState.putString("email", userData.getEmail());
         setPassword();
-        outState.putString("password", password);
+        outState.putString("password", userData.getPassword());
         setPasswordAgain();
         outState.putString("passwordAgain", passwordAgain);
 

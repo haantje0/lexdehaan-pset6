@@ -105,7 +105,7 @@ public class EatDataSetter extends AppCompatActivity {
         }
         else {
             if (hasComments == false) {
-                EatData eatData = new EatData(username, eating, hasComments, comments);
+                EatData eatData = new EatData(username, eating);
                 dbManager.addToDB(EatDataSetter.this, eatData);
             }
             else {
@@ -114,7 +114,7 @@ public class EatDataSetter extends AppCompatActivity {
                             Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    EatData eatData = new EatData(username, eating, hasComments, comments);
+                    EatData eatData = new EatData(username, eating, comments);
                     dbManager.addToDB(EatDataSetter.this, eatData);                }
             }
         }
