@@ -33,18 +33,6 @@ public class EatList extends AppCompatActivity {
         dbManager.getFromDB(this, eatList);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        fbManager.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        fbManager.onStop();
-    }
-
     public void IWantToEatButton(View view){
         Intent intent = new Intent(activity, EatDataSetter.class);
         startActivity(intent);

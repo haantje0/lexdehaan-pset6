@@ -35,18 +35,6 @@ public class Register extends AppCompatActivity {
         fbManager.setListener();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        fbManager.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        fbManager.onStop();
-    }
-
     public void Register(View view) {
         setEmail();
         setUsername();
@@ -66,6 +54,7 @@ public class Register extends AppCompatActivity {
             Toast.makeText(activity, "Fill in a first name",
                     Toast.LENGTH_SHORT).show();
         } else {
+            userData.setIsnew(true);
             fbManager.createUser(activity, userData);
         }
     }

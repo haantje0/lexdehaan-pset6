@@ -42,18 +42,6 @@ public class EatDataSetter extends AppCompatActivity {
         dbManager.setDatabase();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        fbManager.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        fbManager.onStop();
-    }
-
     public void setUsername() {
         username = fbManager.getUsername();
     }

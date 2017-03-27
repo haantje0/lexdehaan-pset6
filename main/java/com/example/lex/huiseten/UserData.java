@@ -9,6 +9,7 @@ public class UserData {
     public String email = "";
     public String password = "";
     public String username = "";
+    public Boolean isnew = false;
 
     public void UserData(){}
 
@@ -24,6 +25,10 @@ public class UserData {
         this.username = username;
     }
 
+    public void setIsnew(Boolean isnew) {
+        this.isnew = isnew;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -34,5 +39,9 @@ public class UserData {
 
     public String getUsername() {
         return username;
+    }
+
+    public Boolean getIsnew() {
+        return isnew;
     }
 }

@@ -89,7 +89,7 @@ class FirebaseManager {
         return user.getDisplayName();
     }
 
-    public void checkAndLogIn(final Context context, final UserData userData, final boolean firstTime) {
+    public void checkAndLogIn(final Context context, final UserData userData) {
         mAuth.signInWithEmailAndPassword(userData.getEmail(), userData.getPassword())
                 .addOnCompleteListener((Activity) context, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -106,7 +106,7 @@ class FirebaseManager {
                         } else {
                             Toast.makeText(context, "Logged in user",
                                     Toast.LENGTH_SHORT).show();
-                            if (firstTime) {
+                            if (userData.getIsnew()) {
                                 setUsername(context, userData);
                             } else {
                                 Intent intent = new Intent(context, EatList.class);
@@ -130,7 +130,7 @@ class FirebaseManager {
                         } else {
                             Toast.makeText(context, "Created user",
                                     Toast.LENGTH_SHORT).show();
-                            checkAndLogIn(context, userData, true);
+                            checkAndLogIn(context, userData);
                         }}});
     }
 }

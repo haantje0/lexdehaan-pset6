@@ -34,18 +34,6 @@ public class MainActivity extends AppCompatActivity {
         fbManager.setListener();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        fbManager.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        fbManager.onStop();
-    }
-
     public void register(View view) {
         Intent intent = new Intent(this, Register.class);
         startActivity(intent);
@@ -64,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "Fill in your password",
                     Toast.LENGTH_SHORT).show();
         } else {
-            fbManager.checkAndLogIn(this, userData, false);
+            fbManager.checkAndLogIn(this, userData);
         }
     }
 
