@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import java.util.Objects;
 
-
 public class EatDataSetter extends AppCompatActivity {
 
     FirebaseManager fbManager = new FirebaseManager();

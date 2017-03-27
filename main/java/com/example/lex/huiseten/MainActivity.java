@@ -15,6 +15,9 @@ public class MainActivity extends AppCompatActivity {
 
     FirebaseManager fbManager = new FirebaseManager();
 
+    String email;
+    String password;
+
     EditText email_EditText;
     EditText password_EditText;
 
@@ -45,10 +48,10 @@ public class MainActivity extends AppCompatActivity {
         setEmail();
         setPassword();
 
-        if (Objects.equals(userData.getEmail(), "")) {
+        if (Objects.equals(email, "")) {
             Toast.makeText(MainActivity.this, "Fill in your email",
                     Toast.LENGTH_SHORT).show();
-        } else if (Objects.equals(userData.getPassword(), "")) {
+        } else if (Objects.equals(password, "")) {
             Toast.makeText(MainActivity.this, "Fill in your password",
                     Toast.LENGTH_SHORT).show();
         } else {
@@ -58,12 +61,14 @@ public class MainActivity extends AppCompatActivity {
 
     public void setEmail() {
         email_EditText = (EditText) findViewById(R.id.email_editText);
-        userData.setEmail(email_EditText.getText().toString());
+        email = email_EditText.getText().toString();
+        userData.setEmail(email);
     }
 
     public void setPassword() {
         password_EditText = (EditText) findViewById(R.id.password_editText);
-        userData.setPassword(password_EditText.getText().toString());
+        password = password_EditText.getText().toString();
+        userData.setPassword(password);
     }
 
     @Override

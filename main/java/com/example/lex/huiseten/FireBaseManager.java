@@ -35,18 +35,6 @@ class FirebaseManager {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
-    private DatabaseReference mDatabase;
-
-    public void onStart() {
-        mAuth.addAuthStateListener(mAuthListener);
-    }
-
-    public void onStop() {
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
-        }
-    }
-
     public void setInstance() {
         mAuth = FirebaseAuth.getInstance();
     }

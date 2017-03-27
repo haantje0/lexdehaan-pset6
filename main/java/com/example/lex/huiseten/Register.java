@@ -1,15 +1,22 @@
 package com.example.lex.huiseten;
 
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.Objects;
+
 public class Register extends AppCompatActivity {
 
     FirebaseManager fbManager = new FirebaseManager();
 
+    String username;
+    String email;
+    String password;
     String passwordAgain;
 
     EditText email_EditText;
@@ -35,22 +42,23 @@ public class Register extends AppCompatActivity {
         fbManager.setListener();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void Register(View view) {
         setEmail();
         setUsername();
         setPassword();
         setPasswordAgain();
 
-        if (!passwordAgain.equals(userData.getPassword())) {
+        if (!passwordAgain.equals(password)) {
             Toast.makeText(activity, "Passwords do not match",
                     Toast.LENGTH_SHORT).show();
             passwordAgain_EditText.getText().clear();
-        } else if (userData.getPassword().length() < 6) {
+        } else if (password.length() < 6) {
             Toast.makeText(activity, "Password not long enough",
                     Toast.LENGTH_SHORT).show();
             password_EditText.getText().clear();
             passwordAgain_EditText.getText().clear();
-        } else if (userData.getUsername() == null) {
+        } else if (Objects.equals(username, "")) {
             Toast.makeText(activity, "Fill in a first name",
                     Toast.LENGTH_SHORT).show();
         } else {
@@ -61,17 +69,20 @@ public class Register extends AppCompatActivity {
 
     public void setEmail() {
         email_EditText = (EditText) findViewById(R.id.email_editText);
-        userData.setEmail(email_EditText.getText().toString());
+        email = email_EditText.getText().toString();
+        userData.setEmail(email);
     }
 
     public void setUsername() {
         username_EditText = (EditText) findViewById(R.id.username_editText);
-        userData.setUsername(username_EditText.getText().toString());
+        username = username_EditText.getText().toString();
+        userData.setUsername(username);
     }
 
     public void setPassword() {
         password_EditText = (EditText) findViewById(R.id.password_editText);
-        userData.setPassword(password_EditText.getText().toString());
+        password = password_EditText.getText().toString();
+        userData.setPassword(password);
     }
 
     public void setPasswordAgain() {
