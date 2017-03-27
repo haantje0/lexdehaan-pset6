@@ -16,6 +16,7 @@ import java.util.Objects;
 public class EatDataSetter extends AppCompatActivity {
 
     FirebaseManager fbManager = new FirebaseManager();
+    DatabaseManager dbManager = new DatabaseManager();
 
     EditText comments_EditText;
     CheckBox comments_CheckBox;
@@ -38,7 +39,7 @@ public class EatDataSetter extends AppCompatActivity {
 
         fbManager.setListener();
 
-        fbManager.setDatabase();
+        dbManager.setDatabase();
     }
 
     @Override
@@ -104,7 +105,8 @@ public class EatDataSetter extends AppCompatActivity {
         }
         else {
             if (hasComments == false) {
-                fbManager.addToDB(EatDataSetter.this, username, eating, hasComments, comments);
+                EatData eatData = new EatData(username, eating, hasComments, comments);
+                dbManager.addToDB(EatDataSetter.this, eatData);
             }
             else {
                 if (Objects.equals(comments, "")) {
@@ -112,8 +114,8 @@ public class EatDataSetter extends AppCompatActivity {
                             Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    fbManager.addToDB(EatDataSetter.this, username, eating, hasComments, comments);
-                }
+                    EatData eatData = new EatData(username, eating, hasComments, comments);
+                    dbManager.addToDB(EatDataSetter.this, eatData);                }
             }
         }
     }

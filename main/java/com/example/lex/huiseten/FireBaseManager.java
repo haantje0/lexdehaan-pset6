@@ -64,13 +64,7 @@ class FirebaseManager {
                 } else {
                     // User is signed out
                     Log.d("signed out", "onAuthStateChanged:signed_out");
-                }
-            }
-        };
-    }
-
-    public void setDatabase() {
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+                }}};
     }
 
     public void setUsername(final Context context) {
@@ -89,9 +83,7 @@ class FirebaseManager {
                             Intent intent = new Intent(context, EatList.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             context.startActivity(intent);
-                        }
-                    }
-                });
+                        }}});
     }
 
     public String getUsername() {
@@ -121,10 +113,7 @@ class FirebaseManager {
                             } else {
                                 Intent intent = new Intent(context, EatList.class);
                                 context.startActivity(intent);
-                            }
-                        }
-                    }
-                });
+                            }}}});
     }
 
     public void createUser(final Context context, final String email, final String password, final String Username) {
@@ -145,49 +134,6 @@ class FirebaseManager {
                                     Toast.LENGTH_SHORT).show();
                             username = Username;
                             checkAndLogIn(context, email, password, true);
-                        }
-                    }
-                });
-    }
-
-    public void getFromDB(final Context context, final ListView eatList) {
-        ValueEventListener postListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                ArrayList<EatData> eatArrayList = new ArrayList<EatData>();
-
-                for (DataSnapshot house : dataSnapshot.getChildren()) {
-                    for (DataSnapshot person : house.getChildren()){
-                        eatArrayList.add(person.getValue(EatData.class));
-                    }
-                }
-
-                Collections.sort(eatArrayList, new Comparator<EatData>() {
-                    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-                    @Override
-                    public int compare(EatData ed1, EatData ed2) {
-                        return Boolean.compare(ed2.getEating(), ed1.getEating());
-                    }
-                });
-
-                EatListAdapter eatListAdapter = new EatListAdapter(context, eatArrayList);
-
-                eatList.setAdapter(eatListAdapter);
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        };
-        mDatabase.addValueEventListener(postListener);
-    }
-
-    public void addToDB(Context context, String username, Boolean eating, Boolean hasComments, String comments) {
-        EatData data = new EatData(username, eating, hasComments, comments);
-        mDatabase.child("Superhuis").child(username).setValue(data);
-
-        Intent intent = new Intent(context, EatList.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        context.startActivity(intent);
+                        }}});
     }
 }

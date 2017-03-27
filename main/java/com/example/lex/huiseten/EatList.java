@@ -11,6 +11,7 @@ import android.widget.ListView;
 public class EatList extends AppCompatActivity {
 
     FirebaseManager fbManager = new FirebaseManager();
+    DatabaseManager dbManager = new DatabaseManager();
 
     ListView eatList;
 
@@ -25,11 +26,11 @@ public class EatList extends AppCompatActivity {
 
         fbManager.setListener();
 
-        fbManager.setDatabase();
+        dbManager.setDatabase();
 
         eatList = (ListView) findViewById(R.id.eatData_ListView);
 
-        fbManager.getFromDB(this, eatList);
+        dbManager.getFromDB(this, eatList);
     }
 
     @Override
