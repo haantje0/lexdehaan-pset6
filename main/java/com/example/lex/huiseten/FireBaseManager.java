@@ -35,10 +35,12 @@ class FirebaseManager {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
+    // set firebase instance
     public void setInstance() {
         mAuth = FirebaseAuth.getInstance();
     }
 
+    // set firebase listener
     public void setListener() {
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -53,13 +55,17 @@ class FirebaseManager {
                 }}};
     }
 
+    // give the new user a username
     public void setUsername(final Context context, UserData userData) {
+        // get the firebase user
         FirebaseUser user = mAuth.getCurrentUser();
 
+        // make a builder with the username
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                 .setDisplayName(userData.getUsername())
                 .build();
 
+        // give the new username to the user
         user.updateProfile(profileUpdates)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -72,11 +78,13 @@ class FirebaseManager {
                         }}});
     }
 
+    // set the username
     public String getUsername() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         return user.getDisplayName();
     }
 
+    // check the given login credentials
     public void checkAndLogIn(final Context context, final UserData userData) {
         mAuth.signInWithEmailAndPassword(userData.getEmail(), userData.getPassword())
                 .addOnCompleteListener((Activity) context, new OnCompleteListener<AuthResult>() {
@@ -102,6 +110,7 @@ class FirebaseManager {
                             }}}});
     }
 
+    // create the new user
     public void createUser(final Context context, final UserData userData) {
         Task<AuthResult> authResultTask = mAuth.createUserWithEmailAndPassword(userData.getEmail(), userData.getPassword())
                 .addOnCompleteListener((Activity) context, new OnCompleteListener<AuthResult>() {

@@ -11,13 +11,16 @@ public class EatData {
     public Boolean hasComments = false;
     public String comments = "";
 
+    // firebase constructor
     public EatData(){}
 
+    // constructor
     public EatData(String Username, Boolean Eating) {
         username = Username;
         eating = Eating;
     }
 
+    // constructor
     public EatData(String Username, Boolean Eating, String Comments) {
         username = Username;
         eating = Eating;
@@ -25,18 +28,22 @@ public class EatData {
         comments = Comments;
     }
 
+    // get eating
     public Boolean getEating() {
         return eating;
     }
 
+    // get has comments
     public Boolean getHasComments() {
         return hasComments;
     }
 
+    // get username
     public String getUsername() {
         return username;
     }
 
+    // get comments
     public String getComments() {
         return comments;
     }

@@ -25,13 +25,16 @@ public class EatListAdapter extends ArrayAdapter<EatData>{
         LayoutInflater theInflater = LayoutInflater.from(getContext());
         View theView = theInflater.inflate(R.layout.person_view, parent, false);
 
+        // put the username in the view
         String username = getItem(position).getUsername();
         TextView usernameTextView = (TextView) theView.findViewById(R.id.usernameTextView);
         usernameTextView.setText(username);
 
+        // set if the user is eating or not
         Boolean eating = getItem(position).getEating();
         ImageView theImageView = (ImageView) theView.findViewById(R.id.CollorIndicator_ImageView);
 
+        // change the collor if the user is eating or not
         if (eating){
             theImageView.setImageResource(R.color.Green);
         }
@@ -39,10 +42,12 @@ public class EatListAdapter extends ArrayAdapter<EatData>{
             theImageView.setImageResource(R.color.Red);
         }
 
+        // set if the user has comments
         Boolean hasComments = getItem(position).getHasComments();
         String comments = getItem(position).getComments();
         TextView CommentsTextView = (TextView) theView.findViewById(R.id.commentsTextView);
 
+        // set the comments
         if (hasComments){
             CommentsTextView.setText(comments);
         }
